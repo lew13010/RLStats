@@ -8,7 +8,7 @@ security:
             memory:
                 users:
                     admin:
-                        password: 
+                        password:
                         roles: 'ROLE_ADMIN'
 
     encoders:
