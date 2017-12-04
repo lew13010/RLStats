@@ -1,0 +1,8 @@
+app_lineup:
+    resource: "@AppBundle/Resources/config/routing/lineup.yml"
+    prefix:   /lineup
+
+app_joueur:
+    resource: "@AppBundle/Resources/config/routing/joueur.yml"
+    prefix:   /
+

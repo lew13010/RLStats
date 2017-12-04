@@ -1,0 +1,24 @@
+lineup_index:
+    path:     /
+    defaults: { _controller: "AppBundle:LineUp:index" }
+    methods:  GET
+
+lineup_show:
+    path:     /{id}/show
+    defaults: { _controller: "AppBundle:LineUp:show" }
+    methods:  GET
+
+lineup_new:
+    path:     /new
+    defaults: { _controller: "AppBundle:LineUp:new" }
+    methods:  [GET, POST]
+
+lineup_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AppBundle:LineUp:edit" }
+    methods:  [GET, POST]
+
+lineup_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AppBundle:LineUp:delete" }
+    methods:  DELETE

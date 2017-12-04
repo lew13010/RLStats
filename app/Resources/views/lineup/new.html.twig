@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Ajouter une Line Up</h1>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Ajouter" class="btn btn-success"/>
+    {{ form_end(form) }}
+
+    <hr>
+    <a href="{{ path('lineup_index') }}" class="btn btn-info">Liste des Line Ups</a>
+{% endblock %}

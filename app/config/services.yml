@@ -1,0 +1,12 @@
+# Learn more about services, parameters and containers at
+# https://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    app.service.api:
+        class: AppBundle\Service\Api
+        arguments: ['@Doctrine\ORM\EntityManagerInterface', '@service_container']
+        calls:
+            - [autoUpdate, ['@?']]
+            - [getRanking, ['@?']]

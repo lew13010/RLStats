@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class="text-center">Joueurs</h2>
+
+    <hr>
+    {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+    <div class="form-row mx-auto">
+        <div class="col">
+            {{ form_widget(form.rankMin) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.rankMax) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.categorie) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.submit) }}
+        </div>
+        <div class="col">
+            <a href="{{ path('joueur_index') }}" class="btn btn-dark">RAZ Filtre</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <hr>
+
+    <table class="table table table-responsive-xl table-striped table-dark table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Pseudo</th>
+            <th>Url</th>
+            <th>Solo - 1v1</th>
+            <th>Double - 2v2</th>
+            <th>Solo Standard - 3v3</th>
+            <th>Standard - 3v3</th>
+            <th>Fonction</th>
+            <th>Line-Up</th>
+            <th>Commentaires</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th>Actions</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for joueur in joueurs %}
+            <tr>
+                <td>{{ joueur.pseudo }}</td>
+                <td>{{ joueur.url }}</td>
+
+                {% for ranks in joueur.ranks %}
+                    <td>
+                        <img src="{{ asset('bundles/app/img/') }}{{ ranks.tiers.image }}.png" alt="" height="50"
+                             width="50"><br>
+                        <span class="small font-weight-bold">{{ ranks.tiers.tierName }}</span><br>
+                        <span class="small font-weight-bold text-secondary">Division {{ ranks.divisions }}</span><br>
+                        <span class="small font-weight-bold text-secondary">{{ ranks.points }} pts - {{ ranks.nbMatch }}
+                            Matches</span><br>
+                    </td>
+                {% endfor %}
+                <td>{{ joueur.fonction }}</td>
+                <td>{{ joueur.lineUp }}</td>
+                <td>{{ joueur.comment }}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td>
+                        <a href="{{ path('joueur_edit', { 'id': joueur.id }) }}" class="text-dark">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                        </span>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
