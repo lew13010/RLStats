@@ -32,11 +32,14 @@ class JoueurController extends Controller
             $joueurs = $em->getRepository('AppBundle:Joueur')->getSearchWithRank($rankMin->getTierId(), $rankMax->getTierId(), $categorie->getId());
         }
 
+        $count = count($joueurs);
+
         //$joueurs = $em->getRepository('AppBundle:Joueur')->findBy(array(), array('pseudo' => 'asc'));
 
         return $this->render('joueur/index.html.twig', array(
             'joueurs' => $joueurs,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'count' => $count,
         ));
     }
 
