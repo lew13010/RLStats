@@ -161,14 +161,14 @@ class JoueurController extends Controller
                     $em->persist($r);
                     $em->flush();
                 }
+            } else {
+                $this->addFlash('danger', 'Erreur sur l\'url du joueur');
             }
 
 
             $em->flush();
 
             return $this->redirectToRoute('joueur_index');
-        } else {
-            $this->addFlash('danger', 'Erreur sur l\'url du joueur');
         }
 
         return $this->render('joueur/edit.html.twig', array(
