@@ -69,6 +69,7 @@ class SiteController extends Controller
     public function showAction(Request $request,Site $site)
     {
         $em = $this->getDoctrine()->getManager();
+        $site = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('sites' => $site), array('dateTournois' => 'DESC'));
         $form = $this->createForm('AppBundle\Form\SearchTournoisType');
         $form->remove('site');
         $form->handleRequest($request);
