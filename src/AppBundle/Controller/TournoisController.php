@@ -60,8 +60,6 @@ class TournoisController extends Controller
     {
         $deleteForm = $this->createDeleteForm($tournois);
 
-        $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('id' => $tournois->getId()), array('dateTournois' => 'desc'));
-
         return $this->render('tournois/show.html.twig', array(
             'tournois' => $tournois,
             'delete_form' => $deleteForm->createView(),

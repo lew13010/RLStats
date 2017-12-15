@@ -17,6 +17,7 @@ class SiteRepository extends \Doctrine\ORM\EntityRepository
             ->select('s', 't', 'l')
             ->innerJoin('s.tournois', 't')
             ->innerJoin('t.lineUps', 'l')
+            ->orderBy('t.dateTournois', 'DESC')
         ;
 
         return $qb->getQuery()->getResult();
