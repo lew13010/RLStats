@@ -64,8 +64,11 @@ class LineUpController extends Controller
     {
         $deleteForm = $this->createDeleteForm($lineUp);
 
+        $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('lineUps' => $lineUp), array('dateTournois' => 'desc'));
+
         return $this->render('lineup/show.html.twig', array(
             'lineUp' => $lineUp,
+            'tournois' => $tournois,
             'delete_form' => $deleteForm->createView(),
         ));
     }
