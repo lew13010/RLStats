@@ -42,6 +42,11 @@ class Tier
      */
     private $image;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\LineUp", mappedBy="rankMin")
+     */
+    private $lineUp;
+
 
     /**
      * Get id
@@ -152,5 +157,46 @@ class Tier
     public function getImage()
     {
         return $this->image;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->lineUp = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add lineUp
+     *
+     * @param \AppBundle\Entity\LineUp $lineUp
+     *
+     * @return Tier
+     */
+    public function addLineUp(\AppBundle\Entity\LineUp $lineUp)
+    {
+        $this->lineUp[] = $lineUp;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineUp
+     *
+     * @param \AppBundle\Entity\LineUp $lineUp
+     */
+    public function removeLineUp(\AppBundle\Entity\LineUp $lineUp)
+    {
+        $this->lineUp->removeElement($lineUp);
+    }
+
+    /**
+     * Get lineUp
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLineUp()
+    {
+        return $this->lineUp;
     }
 }

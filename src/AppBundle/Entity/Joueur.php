@@ -37,13 +37,6 @@ class Joueur
     private $url;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="fonction", type="string", length=255, nullable=true)
-     */
-    private $fonction;
-
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\LineUp", inversedBy="joueurs")
      */
     private $lineUp;
@@ -63,9 +56,21 @@ class Joueur
     private $steamId;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="assoc", type="boolean")
+     */
+    private $association;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ranks", mappedBy="joueurs", cascade={"persist", "remove"})
      */
     private $ranks;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Fonction", inversedBy="joueurs")
+     */
+    private $functions;
 
     /**
      * Constructor
@@ -131,30 +136,6 @@ class Joueur
     public function getUrl()
     {
         return $this->url;
-    }
-
-    /**
-     * Set fonction
-     *
-     * @param string $fonction
-     *
-     * @return Joueur
-     */
-    public function setFonction($fonction)
-    {
-        $this->fonction = $fonction;
-
-        return $this;
-    }
-
-    /**
-     * Get fonction
-     *
-     * @return string
-     */
-    public function getFonction()
-    {
-        return $this->fonction;
     }
 
     /**
@@ -266,5 +247,76 @@ class Joueur
     public function getSteamId()
     {
         return $this->steamId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAssociation()
+    {
+        return $this->association;
+    }
+
+    /**
+     * @param bool $association
+     */
+    public function setAssociation($association)
+    {
+        $this->association = $association;
+    }
+
+
+    /**
+     * Get association
+     *
+     * @return boolean
+     */
+    public function getAssociation()
+    {
+        return $this->association;
+    }
+
+    /**
+     * Get esport
+     *
+     * @return boolean
+     */
+    public function getEsport()
+    {
+        return $this->esport;
+    }
+
+    /**
+     * Add function
+     *
+     * @param \AppBundle\Entity\Fonction $function
+     *
+     * @return Joueur
+     */
+    public function addFunction(\AppBundle\Entity\Fonction $function)
+    {
+        $this->functions[] = $function;
+
+        return $this;
+    }
+
+    /**
+     * Remove function
+     *
+     * @param \AppBundle\Entity\Fonction $function
+     */
+    public function removeFunction(\AppBundle\Entity\Fonction $function)
+    {
+        $this->functions->removeElement($function);
+    }
+
+    /**
+     * Get functions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFunctions()
+    {
+        return $this->functions;
     }
 }

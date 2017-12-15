@@ -10,3 +10,16 @@ services:
         calls:
             - [autoUpdate, ['@?']]
             - [getRanking, ['@?']]
+
+    app.service.navigation:
+        class: AppBundle\Service\Navigation
+        arguments: ['@Doctrine\ORM\EntityManagerInterface', '@service_container']
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: lineUps }
+            - { name: kernel.event_listener, event: kernel.response, method: sites }
+
+    app.form.tournois_type:
+        class: AppBundle\Form\TournoisType
+        arguments: ['@Doctrine\ORM\EntityManagerInterface', '@service_container']
+        tags:
+            - { name: form.type, alias: AppBundle\Form\TournoisType }

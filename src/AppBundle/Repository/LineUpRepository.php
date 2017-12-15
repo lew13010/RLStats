@@ -10,4 +10,17 @@ namespace AppBundle\Repository;
  */
 class LineUpRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllWithPlayers()
+    {
+        $qb = $this->createQueryBuilder('l');
+        $qb
+            ->select('l', 'j', 'r')
+            ->leftJoin('l.joueurs', 'j')
+            ->leftJoin('l.rankMin', 'r')
+            ->orderBy('l.rankMin', 'DESC')
+            ->addOrderBy('l.nom', 'ASC')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

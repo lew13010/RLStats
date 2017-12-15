@@ -1,36 +1,70 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Lineup</h1>
+    <div class="row content">
+        <div class="card text-white bg-dark col-2">
+            {% if lineUp.image != '' %}
+                <img class="card-img-top" src="{{ asset('uploads/img/') }}{{ lineUp.image }}" alt="Image Line Up">
+            {% else %}
+                <img class="card-img-top" src="{{ asset('bundles/app/img/delta.png') }}" alt="Image Line Up">
+            {% endif %}
+            <div class="card-body">
+                <h2 class="card-title">{{ lineUp.tag }}</h2>
+                <h4 class="card-subtitle mb-2 text-muted">{{ lineUp.nom }}</h4>
+                <p class="card-text"><b>Joueurs : </b>
+                    {% for joueur in lineUp.joueurs %}
+                        {{ joueur.pseudo }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p class="card-text"><b>Description : </b>{{ lineUp.description }}</p>
+                <p class="card-text"><b>Age : </b>18ans</p>
+                <p class="card-text"><b>Niveau : </b><img
+                            src="{{ asset('/bundles/app/img/') }}{{ lineUp.rankMin.image }}.png"
+                            alt="" height="50" width="50">
+                    {{ lineUp.rankMin.tierName }}</p>
+                <p class="card-text"><b>A savoir : </b>Actif & dispo</p>
+            </div>
+        </div>
+        <div class="col-10">
+            <table class="table table-responsive-xl table-striped table-dark table-hover col-10">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Tournois</th>
+                    <th>Type</th>
+                    <th>Resultats</th>
+                    <th>Commentaires</th>
+                    {% if is_granted('ROLE_LU') %}
+                        <th>Actions</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for tournois in lineUp.tournois %}
+                    <tr>
+                        <td>{{ tournois.dateTournois|date('d/m/Y') }}</td>
+                        <td><a href="{{ path('site_show', {'id': tournois.sites.id}) }}">{{ tournois.sites.name }}</a></td>
+                        <td>{{ tournois.types.name }}</td>
+                        <td>{{ tournois.tours.round }}</td>
+                        <td>{{ tournois.commentaires }}</td>
+                        {% if is_granted('ROLE_LU') %}
+                            <td>
+                                {% if is_granted('ROLE_ADMIN') or app.user.username == lineUp.tag|lower %}
+                                    <a href="{{ path('tournois_edit', { 'id': tournois.id }) }}" class="text-dark">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ lineUp.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ lineUp.nom }}</td>
-            </tr>
-            <tr>
-                <th>Tag</th>
-                <td>{{ lineUp.tag }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('lineup_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('lineup_edit', { 'id': lineUp.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
 {% endblock %}

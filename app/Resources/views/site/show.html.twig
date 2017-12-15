@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header">
+        <h2>Tournois : {{ site.name }}</h2>
+    </div>
+
+    <hr>
+    {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+    <div class="form-row mx-auto">
+        <div class="col">
+            {{ form_widget(form.mois) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.lineUp) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.categorie) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.resultats) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.submit) }}
+        </div>
+        <div class="col">
+            <a href="{{ path('site_index') }}" class="btn btn-dark">RAZ Filtre</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <hr>
+
+    <table class="table table-responsive-xl table-striped table-dark table-hover">
+        <tbody>
+        <tr>
+            <th>Date</th>
+            <th>Line Up</th>
+            <th>Type</th>
+            <th>Resultats</th>
+            <th>Commentaires</th>
+            {% if is_granted('ROLE_LU') %}
+                <th>Actions</th>
+            {% endif %}
+        </tr>
+        {% for tournois in site.tournois %}
+            <tr>
+                <td>{{ tournois.dateTournois|date('d/m/Y') }}</td>
+                <td><a href="{{ path('lineup_show', {'id': tournois.lineUps.id}) }}">{{ tournois.lineUps.tag }}</a></td>
+                <td>{{ tournois.types.name }}</td>
+                <td>{{ tournois.tours }}</td>
+                <td>{{ tournois.commentaires }}</td>
+                {% if is_granted('ROLE_LU') %}
+                    <td>
+                        <a href="{{ path('tournois_edit', { 'id': tournois.id }) }}" class="text-dark">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                        </span>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

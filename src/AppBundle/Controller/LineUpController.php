@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\LineUp;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Service\FileUploader;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Lineup controller.
@@ -20,10 +22,12 @@ class LineUpController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $lineUps = $em->getRepository('AppBundle:LineUp')->findAll();
+        $lineUps = $em->getRepository('AppBundle:LineUp')->getAllWithPlayers();
 
+        $count = count($lineUps);
         return $this->render('lineup/index.html.twig', array(
             'lineUps' => $lineUps,
+            'count' => $count
         ));
     }
 
@@ -39,6 +43,7 @@ class LineUpController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $lineUp->setUpdatedAt(new \DateTime());
             $em->persist($lineUp);
             $em->flush();
 
@@ -71,11 +76,17 @@ class LineUpController extends Controller
      */
     public function editAction(Request $request, LineUp $lineUp)
     {
+        $tag = strtolower($lineUp->getTag());
+        $username = $this->get('security.token_storage')->getToken()->getUser()->getUsername();
+        if($tag != $username and false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
+            throw new AccessDeniedException('Vous n\'avez pas la permission d\'accéder à cette page!');
+        }
         $deleteForm = $this->createDeleteForm($lineUp);
         $editForm = $this->createForm('AppBundle\Form\LineUpType', $lineUp);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $lineUp->setUpdatedAt(new \DateTime());
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('lineup_index', array('id' => $lineUp->getId()));

@@ -6,3 +6,11 @@ app_joueur:
     resource: "@AppBundle/Resources/config/routing/joueur.yml"
     prefix:   /
 
+app_fonction:
+    resource: "@AppBundle/Resources/config/routing/fonction.yml"
+    prefix:   /fonction
+
+app_tournois:
+    resource: "@AppBundle/Resources/config/routing/tournois.yml"
+    prefix:   /tournois
+

@@ -22,7 +22,7 @@ class JoueurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $joueurs = $em->getRepository('AppBundle:Joueur')->getAllWithRank();
 
-        $form = $this->createForm('AppBundle\Form\SearchType');
+        $form = $this->createForm('AppBundle\Form\SearchJoueurType');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -33,8 +33,6 @@ class JoueurController extends Controller
         }
 
         $count = count($joueurs);
-
-        //$joueurs = $em->getRepository('AppBundle:Joueur')->findBy(array(), array('pseudo' => 'asc'));
 
         return $this->render('joueur/index.html.twig', array(
             'joueurs' => $joueurs,

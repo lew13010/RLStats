@@ -14,10 +14,11 @@ class JoueurRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('j');
         $qb
-            ->select('j', 'r', 'd', 't', 'l')
+            ->select('j', 'r', 'd', 't', 'l', 'f')
             ->leftJoin('j.lineUp', 'l')
             ->innerJoin('j.ranks', 'r')
             ->innerJoin('r.tiers', 't')
+            ->leftJoin('j.functions', 'f')
             ->innerJoin('r.divisions','d')
             ->addOrderBy('j.pseudo', 'asc')
             ->addOrderBy('r.types', 'asc')

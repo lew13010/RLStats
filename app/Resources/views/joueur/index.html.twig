@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2 class="text-center">Joueurs <span class="badge badge-info">{{ count }}</span></h2>
+    <div class="header">
+        <h2>Joueurs <span class="badge badge-info">{{ count }}</span></h2>
+    </div>
 
     <hr>
     {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
@@ -25,11 +27,11 @@
     {{ form_end(form) }}
     <hr>
 
-    <table class="table table table-responsive-xl table-striped table-dark table-hover">
+    <table class="table table-responsive-xl table-striped table-dark table-hover">
         <thead class="thead-dark">
         <tr>
             <th>Pseudo</th>
-            <th>Url</th>
+            <th>Links</th>
             <th>Solo - 1v1</th>
             <th>Double - 2v2</th>
             <th>Solo Standard - 3v3</th>
@@ -45,8 +47,21 @@
         <tbody>
         {% for joueur in joueurs %}
             <tr>
-                <td>{{ joueur.pseudo }}</td>
-                <td>{{ joueur.url }}</td>
+                <td>
+                    <b>{{ joueur.pseudo }}</b><br>
+                    {% if joueur.association %}
+                        <span class="small">Membre Association</span><br>
+                    {% endif %}
+                    {% if joueur.lineUp and joueur.lineUp.esport %}
+                        <span class="small">Delta e-Sport</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ joueur.url }}" target="_blank" class="text-white">{{ joueur.url }}</a> <br>
+                    <a href="https://rltracker.pro/profiles/{{ joueur.steamId }}/steam"
+                       target="_blank">rltracker.pro</a> -
+                    <a href="https://rocketleague.tracker.network/profile/steam/{{ joueur.steamId }}/" target="_blank">tracker.network</a>
+                </td>
 
                 {% for ranks in joueur.ranks %}
                     <td>
@@ -58,8 +73,16 @@
                             Matches</span><br>
                     </td>
                 {% endfor %}
-                <td>{{ joueur.fonction }}</td>
-                <td>{{ joueur.lineUp }}</td>
+                <td>
+                    {% for function in joueur.functions %}
+                        <b style="color: {{ function.color }}">{{ function.name }}</b><br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if joueur.lineUp %}
+                        {{ joueur.lineUp.tag }}
+                    {% endif %}
+                </td>
                 <td>{{ joueur.comment }}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td>

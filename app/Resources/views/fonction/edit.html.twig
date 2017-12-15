@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header">
+        <h2>Editer la Fonction : {{ fonction.name }}</h2>
+    </div>
+    <div class="content">
+
+        {{ form_start(edit_form) }}
+        <div class="form-group row">
+            {{ form_label(edit_form.name, 'Titre de la fonction', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(edit_form.name) }}
+            </div>
+        </div>
+        <div class="form-group row">
+            {{ form_label(edit_form.color, 'Couleur d\'affichage (ex: #FF0000)', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(edit_form.color) }}
+            </div>
+        </div>
+        <div class="row col-12 justify-content-end">
+            <input type="submit" value="Ajouter" class="btn btn-success"/>
+            {{ form_end(edit_form) }}
+            {{ form_start(delete_form) }}
+            <div class="justify-content-end">
+                <input type="submit" value="Supprimer" class="btn btn-danger">
+            </div>
+            {{ form_end(delete_form) }}
+        </div>
+
+        <hr>
+        <div class="row col-12 justify-content-end">
+            <a href="{{ path('fonction_index') }}" class="btn btn-info">Liste des fonctions</a>
+        </div>
+    </div>
+{% endblock %}

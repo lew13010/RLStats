@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use AppBundle\Entity\LineUp;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,9 +25,15 @@ class JoueurType extends AbstractType
             ->add('url', TextType::class, array(
                 'required' => true
             ))
-            ->add('fonction', TextType::class, array(
-                'required' => false
-            ))
+            ->add('functions', EntityType::class, array(
+                    'label' => 'Fonction',
+                    'class' => 'AppBundle\Entity\Fonction',
+                    'choice_label' => 'name',
+                    'multiple' => true,
+                    'expanded' => true,
+                    'required' => false,
+                )
+            )
             ->add('lineUp', EntityType::class, array(
                     'class' => 'AppBundle\Entity\LineUp',
                     'choice_label' => 'tag',
@@ -38,9 +45,13 @@ class JoueurType extends AbstractType
             ->add('comment', TextType::class, array(
                 'required' => false,
             ))
+            ->add('association', CheckboxType::class, array(
+                'label' => 'Membre de l\'association',
+                'required' => false
+            ))
         ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header">
+        <h2>Tournois</h2>
+    </div>
+
+    <table class="table table table-responsive-xl table-striped table-dark table-hover">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Tournois</th>
+            <th>Line Up</th>
+            <th>Type</th>
+            <th>Resultats</th>
+            <th>Commentaires</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tournoi in tournois %}
+            <tr>
+                <td>{{ tournoi.dateTournois|date('d/m/Y') }}</td>
+                <td>{{ tournoi.sites.name }}</td>
+                <td>{{ tournoi.lineUps.tag }}</td>
+                <td>{{ tournoi.types.name }}</td>
+                <td>{{ tournoi.tours }}</td>
+                <td>{{ tournoi.commentaires }}</td>
+                <td>
+                    <a href="{{ path('tournois_edit', { 'id': tournoi.id }) }}" class="text-dark">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

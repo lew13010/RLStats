@@ -14,7 +14,7 @@ lineup_new:
     methods:  [GET, POST]
 
 lineup_edit:
-    path:     /{id}/edit
+    path:     /edit/{id}
     defaults: { _controller: "AppBundle:LineUp:edit" }
     methods:  [GET, POST]
 

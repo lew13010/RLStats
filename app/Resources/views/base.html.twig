@@ -11,8 +11,24 @@
         .container-fluid{
             padding: 0;
         }
+        .mb-2{
+            margin-bottom: 0 !important;
+        }
+        .table{
+            margin-bottom: 0 !important;
+        }
         th, td {
             text-align: center;
+        }
+        h2{
+            margin-top: 0.5rem;
+        }
+        .header{
+            margin: 1rem;
+            text-align: center;
+        }
+        .content{
+            margin: 1rem;
         }
     </style>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
@@ -22,6 +38,7 @@
     {% include 'nav.html.twig' %}
     {% block body %}
     {% endblock %}
+    {% include 'footer.html.twig' %}
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

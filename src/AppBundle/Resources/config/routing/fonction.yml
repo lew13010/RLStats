@@ -1,0 +1,19 @@
+fonction_index:
+    path:     /
+    defaults: { _controller: "AppBundle:Fonction:index" }
+    methods:  GET
+
+fonction_new:
+    path:     /new
+    defaults: { _controller: "AppBundle:Fonction:new" }
+    methods:  [GET, POST]
+
+fonction_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AppBundle:Fonction:edit" }
+    methods:  [GET, POST]
+
+fonction_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AppBundle:Fonction:delete" }
+    methods:  DELETE

@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Type
+ * Site
  *
- * @ORM\Table(name="type")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TypeRepository")
+ * @ORM\Table(name="site")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\SiteRepository")
  */
-class Type
+class Site
 {
     /**
      * @var int
@@ -29,12 +29,7 @@ class Type
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ranks", mappedBy="types")
-     */
-    private $ranks;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournois", mappedBy="types")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournois", mappedBy="sites")
      */
     private $tournois;
 
@@ -54,7 +49,7 @@ class Type
      *
      * @param string $name
      *
-     * @return Type
+     * @return Site
      */
     public function setName($name)
     {
@@ -72,51 +67,17 @@ class Type
     {
         return $this->name;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->ranks = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add rank
-     *
-     * @param \AppBundle\Entity\Ranks $rank
-     *
-     * @return Type
-     */
-    public function addRank(\AppBundle\Entity\Ranks $rank)
-    {
-        $this->ranks[] = $rank;
-
-        return $this;
-    }
-
-    /**
-     * Remove rank
-     *
-     * @param \AppBundle\Entity\Ranks $rank
-     */
-    public function removeRank(\AppBundle\Entity\Ranks $rank)
-    {
-        $this->ranks->removeElement($rank);
-    }
-
-    /**
-     * Get ranks
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRanks()
-    {
-        return $this->ranks;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
+        $this->tournois = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -124,7 +85,7 @@ class Type
      *
      * @param \AppBundle\Entity\Tournois $tournois
      *
-     * @return Type
+     * @return Site
      */
     public function addTournois(\AppBundle\Entity\Tournois $tournois)
     {

@@ -1,19 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2 class="text-center">Line Ups</h2>
+    <div class="header">
+        <h2 class="text-center">Line Ups <span class="badge badge-info">{{ count }}</span></h2>
+    </div>
 
-    <hr>
-
-    <table class="table table table-responsive-xl table-striped table-dark table-hover">
+    <table class="table table-responsive-xl table-striped table-dark table-hover">
         <thead class="thead-dark">
         <tr>
             <th>Nom</th>
             <th>Tag</th>
+            <th>Rank Min</th>
             <th>Membres</th>
-            {% if is_granted('ROLE_ADMIN') %}
-                <th>Actions</th>
-            {% endif %}
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -21,21 +20,31 @@
             <tr>
                 <td>{{ lineUp.nom }}</td>
                 <td>{{ lineUp.tag }}</td>
+                <td><img src="{{ asset('bundles/app/img/') }}{{ lineUp.rankMin.image }}.png" height="50" width="50">
+                </td>
                 <td>
                     {% for joueur in lineUp.joueurs %}
                         {{ joueur }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </td>
-                    {% if is_granted('ROLE_ADMIN') %}
+
                 <td>
-                    <a href="{{ path('lineup_edit', { 'id': lineUp.id }) }}" class="text-dark">
+                    <a href="{{ path('lineup_show', { 'id': lineUp.id }) }}" class="text-dark">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                    {% if is_granted('ROLE_LU') %}
+                        {% if is_granted('ROLE_ADMIN') or app.user.username == lineUp.tag|lower %}
+                            <a href="{{ path('lineup_edit', { 'id': lineUp.id }) }}" class="text-dark">
                         <span class="fa-stack fa-lg">
                             <i class="fa fa-circle fa-stack-2x"></i>
                             <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                         </span>
-                    </a>
-                </td>
-                {% endif %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

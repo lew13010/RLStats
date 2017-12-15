@@ -1,0 +1,24 @@
+tournois_new:
+    path:     /new
+    defaults: { _controller: "AppBundle:Tournois:new" }
+    methods:  [GET, POST]
+
+tournois_edit:
+    path:     /edit/{id}
+    defaults: { _controller: "AppBundle:Tournois:edit" }
+    methods:  [GET, POST]
+
+tournois_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AppBundle:Tournois:delete" }
+    methods:  DELETE
+
+site_index:
+    path:     /
+    defaults: { _controller: "AppBundle:Site:index" }
+    methods:  [GET, POST]
+
+site_show:
+    path:     /{id}/show
+    defaults: { _controller: "AppBundle:Site:show" }
+    methods:  GET

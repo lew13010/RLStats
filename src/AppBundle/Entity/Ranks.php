@@ -210,4 +210,5 @@ class Ranks
     {
         return $this->divisions;
     }
+
 }

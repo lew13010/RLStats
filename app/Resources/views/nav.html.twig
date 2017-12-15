@@ -12,8 +12,31 @@
             <li class="nav-item {% if app.request.attributes.get('_route') starts with 'joueur' %}active{% endif %}">
                 <a class="nav-link" href="{{ path('joueur_index') }}">Joueurs</a>
             </li>
-            <li class="nav-item {% if app.request.attributes.get('_route') starts with 'lineup' %}active{% endif %}">
-                <a class="nav-link" href="{{ path('lineup_index') }}">Line Up</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Line Ups
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ path('lineup_index') }}">Liste</a>
+                    <div class="dropdown-divider"></div>
+                    {% for lu in nav.lineUps %}
+                        <a class="dropdown-item" href="{{ path('lineup_show', { 'id': lu.id }) }}">{{ lu.tag }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Tournois
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ path('site_index') }}">Tous</a>
+                    <div class="dropdown-divider"></div>
+                    {% for site in nav.sites %}
+                        <a class="dropdown-item" href="{{ path('site_show', { 'id': site.id}) }}">{{ site.name }}</a>
+                    {% endfor %}
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -21,12 +44,18 @@
                     Administration
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% if not is_granted('ROLE_ADMIN') %}
+                    {% if not is_granted('ROLE_LU') %}
                         <a class="dropdown-item" href="{{ path('login') }}">Connexion</a>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                         <a class="dropdown-item" href="{{ path('joueur_new') }}">Ajouter un Joueur</a>
                         <a class="dropdown-item" href="{{ path('lineup_new') }}">Ajouter une Line Up</a>
+                        <a class="dropdown-item" href="{{ path('tournois_new') }}">Ajouter un resultat</a>
+                        <a class="dropdown-item" href="{{ path('fonction_index') }}">Gerer Fonctions</a>
+                        <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_LU') and not is_granted('ROLE_ADMIN') %}
+                        <a class="dropdown-item" href="{{ path('tournois_new') }}">Ajouter un resultat</a>
                         <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
                     {% endif %}
                 </div>
