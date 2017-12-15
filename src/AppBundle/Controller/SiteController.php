@@ -96,7 +96,7 @@ class SiteController extends Controller
                 $resultats = false;
             }
 
-            $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $lineUp, $site->getId(), $categorie, $resultats);
+            $site = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $lineUp, $site->getId(), $categorie, $resultats);
         }
 
         return $this->render('site/show.html.twig', array(

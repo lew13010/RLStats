@@ -42,7 +42,7 @@
                 <th>Actions</th>
             {% endif %}
         </tr>
-        {% for tournois in site.tournois %}
+        {% for tournois in site %}
             <tr>
                 <td>{{ tournois.dateTournois|date('d/m/Y') }}</td>
                 <td><a href="{{ path('lineup_show', {'id': tournois.lineUps.id}) }}">{{ tournois.lineUps.tag }}</a></td>
