@@ -15,8 +15,8 @@ class SiteRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('s');
         $qb
             ->select('s', 't', 'l')
-            ->innerJoin('s.tournois', 't')
-            ->innerJoin('t.lineUps', 'l')
+            ->leftJoin('s.tournois', 't')
+            ->leftJoin('t.lineUps', 'l')
             ->orderBy('t.dateTournois', 'DESC')
         ;
 
