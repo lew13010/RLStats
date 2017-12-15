@@ -69,6 +69,7 @@ class SiteController extends Controller
     public function showAction(Request $request,Site $site)
     {
         $em = $this->getDoctrine()->getManager();
+        $name = $site->getName();
         $site = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('sites' => $site), array('dateTournois' => 'DESC'));
         $form = $this->createForm('AppBundle\Form\SearchTournoisType');
         $form->remove('site');
@@ -100,6 +101,7 @@ class SiteController extends Controller
         }
 
         return $this->render('site/show.html.twig', array(
+            'name' => $name,
             'form' => $form->createView(),
             'site' => $site,
         ));
