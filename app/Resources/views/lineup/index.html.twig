@@ -38,10 +38,10 @@
                     {% if is_granted('ROLE_LU') %}
                         {% if is_granted('ROLE_ADMIN') or app.user.username == lineUp.tag|lower %}
                             <a href="{{ path('lineup_edit', { 'id': lineUp.id }) }}" class="text-dark">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                        </span>
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                </span>
                             </a>
                         {% endif %}
                     {% endif %}

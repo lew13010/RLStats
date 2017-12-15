@@ -40,17 +40,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for tournois in lineUp.tournois %}
+                {% for tournoi in tournois %}
                     <tr>
-                        <td>{{ tournois.dateTournois|date('d/m/Y') }}</td>
-                        <td><a href="{{ path('site_show', {'id': tournois.sites.id}) }}">{{ tournois.sites.name }}</a></td>
-                        <td>{{ tournois.types.name }}</td>
-                        <td>{{ tournois.tours.round }}</td>
-                        <td>{{ tournois.commentaires }}</td>
+                        <td>{{ tournoi.dateTournois|date('d/m/Y') }}</td>
+                        <td><a href="{{ path('site_show', {'id': tournoi.sites.id}) }}">{{ tournoi.sites.name }}</a></td>
+                        <td>{{ tournoi.types.name }}</td>
+                        <td>{{ tournoi.tours.round }}</td>
+                        <td>{{ tournoi.commentaires }}</td>
                         {% if is_granted('ROLE_LU') %}
                             <td>
                                 {% if is_granted('ROLE_ADMIN') or app.user.username == lineUp.tag|lower %}
-                                    <a href="{{ path('tournois_edit', { 'id': tournois.id }) }}" class="text-dark">
+                                    <a href="{{ path('tournois_edit', { 'id': tournoi.id }) }}" class="text-dark">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
