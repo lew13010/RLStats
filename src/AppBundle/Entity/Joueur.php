@@ -38,6 +38,7 @@ class Joueur
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\LineUp", inversedBy="joueurs")
+     * @JoinColumn(onDelete="SET NULL")
      */
     private $lineUp;
 

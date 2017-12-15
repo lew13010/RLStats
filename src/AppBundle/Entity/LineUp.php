@@ -55,7 +55,7 @@ class LineUp
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Joueur", mappedBy="lineUp")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @JoinColumn(onDelete="SET NULL")
      */
     private $joueurs;
 
