@@ -70,7 +70,7 @@ class SiteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $name = $site->getName();
-        $site = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('sites' => $site), array('dateTournois' => 'DESC'));
+        $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('sites' => $site), array('dateTournois' => 'DESC'));
         $form = $this->createForm('AppBundle\Form\SearchTournoisType');
         $form->remove('site');
         $form->handleRequest($request);
@@ -97,13 +97,13 @@ class SiteController extends Controller
                 $resultats = false;
             }
 
-            $site = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $lineUp, $site->getId(), $categorie, $resultats);
+            $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $lineUp, $site->getId(), $categorie, $resultats);
         }
 
         return $this->render('site/show.html.twig', array(
             'name' => $name,
             'form' => $form->createView(),
-            'site' => $site,
+            'site' => $tournois,
         ));
     }
 }
