@@ -21,4 +21,4 @@ site_index:
 site_show:
     path:     /{id}/show
     defaults: { _controller: "AppBundle:Site:show" }
-    methods:  GET
+    methods:  [GET, POST]
