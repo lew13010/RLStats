@@ -14,8 +14,9 @@ class LineUpRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('l');
         $qb
-            ->select('l', 'j', 'r')
+            ->select('l', 'j', 'r', 'f')
             ->leftJoin('l.joueurs', 'j')
+            ->leftJoin('j.functions', 'f')
             ->leftJoin('l.rankMin', 'r')
             ->orderBy('l.rankMin', 'DESC')
             ->addOrderBy('l.nom', 'ASC')

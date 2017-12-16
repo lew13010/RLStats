@@ -23,8 +23,19 @@
                 <td><img src="{{ asset('bundles/app/img/') }}{{ lineUp.rankMin.image }}.png" height="50" width="50">
                 </td>
                 <td>
+                    {% set capitaine = false %}
                     {% for joueur in lineUp.joueurs %}
-                        {{ joueur }}{% if not loop.last %}, {% endif %}
+                        {% for fonction in joueur.functions %}
+                            {% if fonction == 'Capitaine' %}
+                                {% set capitaine = true %}
+                                <b class="text-danger">{{ joueur }}</b>
+                            {% endif %}
+                        {% endfor %}
+                        {% if not capitaine %}
+                            {{ joueur }}
+                        {% endif %}
+                        {% if not loop.last %} - {% endif %}
+                        {% set capitaine = false %}
                     {% endfor %}
                 </td>
 
