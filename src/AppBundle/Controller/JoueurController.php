@@ -21,6 +21,7 @@ class JoueurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $joueurs = $em->getRepository('AppBundle:Joueur')->getAllWithRank();
+        $update = $em->getRepository('AppBundle:Date')->findOneBy(array('id' => 1))->getUpdateAt();
 
         $form = $this->createForm('AppBundle\Form\SearchJoueurType');
         $form->handleRequest($request);
@@ -38,6 +39,7 @@ class JoueurController extends Controller
             'joueurs' => $joueurs,
             'form' => $form->createView(),
             'count' => $count,
+            'update' => $update,
         ));
     }
 

@@ -50,5 +50,11 @@ class AutoUpdateCommand extends Command implements ContainerAwareInterface
             $this->container->get('app.service.api')->autoUpdate($joueur);
             usleep(500000);
         }
+        $date = new \DateTime('NOW');
+
+        $update = $em->getRepository('AppBundle:Date')->findOneBy(array('id' => 1));
+        $update->setUpdateAt($date);
+        $em->persist($update);
+        $em->flush();
     }
 }
