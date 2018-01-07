@@ -60,16 +60,55 @@ class LineUpController extends Controller
      * Finds and displays a lineUp entity.
      *
      */
-    public function showAction(LineUp $lineUp)
+    public function showAction(Request $request,LineUp $lineUp)
     {
         $deleteForm = $this->createDeleteForm($lineUp);
 
-        $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('lineUps' => $lineUp), array('dateTournois' => 'desc'));
+        $now = new \DateTime();
+        $mois = $now->format('m');
+        $annee = $now->format('Y');
+
+        $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->getSearch($mois, $annee, $lineUp->getId(), false, false, false);
+
+        $form = $this->createForm('AppBundle\Form\SearchTournoisType');
+        $form->remove('lineUp');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->getData()['mois'] != null){
+                $mois = $form->getData()['mois'];
+            }else{
+                $mois = false;
+            }
+            if($form->getData()['annee'] != null){
+                $annee = $form->getData()['annee'];
+            }else{
+                $annee = false;
+            }
+            if($form->getData()['site'] != null){
+                $site = $form->getData()['site']->getId();
+            }else{
+                $site = false;
+            }
+            if($form->getData()['categorie'] != null){
+                $categorie = $form->getData()['categorie']->getId();
+            }else{
+                $categorie = false;
+            }
+            if($form->getData()['resultats'] != null){
+                $resultats = $form->getData()['resultats']->getId();
+            }else{
+                $resultats = false;
+            }
+
+            $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->getSearch($mois, $annee, $lineUp->getId(), $site, $categorie, $resultats);
+        }
 
         return $this->render('lineup/show.html.twig', array(
             'lineUp' => $lineUp,
             'tournois' => $tournois,
             'delete_form' => $deleteForm->createView(),
+            'form' => $form->createView(),
         ));
     }
 

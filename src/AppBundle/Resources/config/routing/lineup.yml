@@ -6,7 +6,7 @@ lineup_index:
 lineup_show:
     path:     /{id}/show
     defaults: { _controller: "AppBundle:LineUp:show" }
-    methods:  GET
+    methods:  [GET, POST]
 
 lineup_new:
     path:     /new

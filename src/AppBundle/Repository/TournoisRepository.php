@@ -10,7 +10,7 @@ namespace AppBundle\Repository;
  */
 class TournoisRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getSearch($mois, $lineUp, $site, $categorie, $resultats)
+    public function getSearch($mois, $annee, $lineUp, $site, $categorie, $resultats)
     {
         $qb = $this->createQueryBuilder('t');
         $qb
@@ -20,18 +20,40 @@ class TournoisRepository extends \Doctrine\ORM\EntityRepository
             ->orderBy('t.dateTournois', 'DESC')
         ;
 
-        if ($mois != false) {
-            $date = new \DateTime('2017-' . $mois . '-01');
+        if ($annee != false && $mois != false) {
+            $date = new \DateTime($annee . '-' . $mois . '-01');
             $dateStart = $date->format('Y-m-d');
             $dateEnd = $date->format('Y-m-t');
-
-            $qb
-                ->andWhere('t.dateTournois >= :dateStart')
-                ->andWhere('t.dateTournois <= :dateEnd')
-                ->setParameter(':dateStart', $dateStart)
-                ->setParameter(':dateEnd', $dateEnd)
-            ;
         }
+
+        if ($annee != false && $mois == false) {
+            $firstDate = new \DateTime($annee . '-01-01');
+            $lastDate = new \DateTime($annee . '-12-31');
+            $dateStart = $firstDate->format('Y-m-d');
+            $dateEnd = $lastDate->format('Y-m-d');
+        }
+
+        if ($annee == false && $mois != false) {
+            $now = new \DateTime();
+            $year = $now->format('Y');
+            $date = new \DateTime($year . '-' . $mois . '-01');
+            $dateStart = $date->format('Y-m-d');
+            $dateEnd = $date->format('Y-m-t');
+        }
+
+        if ($annee == false && $mois == false) {
+            $date = new \DateTime('2017-01-01');
+            $now = new \DateTime();
+            $dateStart = $date->format('Y-m-d');
+            $dateEnd = $now->format('Y-m-d');
+        }
+
+        $qb
+            ->andWhere('t.dateTournois >= :dateStart')
+            ->andWhere('t.dateTournois <= :dateEnd')
+            ->setParameter(':dateStart', $dateStart)
+            ->setParameter(':dateEnd', $dateEnd)
+        ;
 
         if ($lineUp != false) {
             $qb

@@ -21,7 +21,11 @@ class SiteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $tournois = $em->getRepository('AppBundle:Tournois')->findBy([], array('dateTournois' => 'desc'));
+        $now = new \DateTime();
+        $mois = $now->format('m');
+        $annee = $now->format('Y');
+
+        $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $annee, false, false, false, false);
 
         $form = $this->createForm('AppBundle\Form\SearchTournoisType');
         $form->handleRequest($request);
@@ -31,6 +35,11 @@ class SiteController extends Controller
                 $mois = $form->getData()['mois'];
             }else{
                 $mois = false;
+            }
+            if($form->getData()['annee'] != null){
+                $annee = $form->getData()['annee'];
+            }else{
+                $annee = false;
             }
             if($form->getData()['lineUp'] != null){
                 $lineUp = $form->getData()['lineUp']->getId();
@@ -53,7 +62,7 @@ class SiteController extends Controller
                 $resultats = false;
             }
 
-            $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $lineUp, $site, $categorie, $resultats);
+            $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $annee, $lineUp, $site, $categorie, $resultats);
         }
 
         return $this->render('site/index.html.twig', array(
@@ -69,8 +78,12 @@ class SiteController extends Controller
     public function showAction(Request $request,Site $site)
     {
         $em = $this->getDoctrine()->getManager();
-        $name = $site->getName();
-        $tournois = $this->getDoctrine()->getRepository('AppBundle:Tournois')->findBy(array('sites' => $site), array('dateTournois' => 'DESC'));
+
+        $now = new \DateTime();
+        $mois = $now->format('m');
+        $annee = $now->format('Y');
+
+        $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $annee, false, $site->getId(), false, false);
         $form = $this->createForm('AppBundle\Form\SearchTournoisType');
         $form->remove('site');
         $form->handleRequest($request);
@@ -80,6 +93,11 @@ class SiteController extends Controller
                 $mois = $form->getData()['mois'];
             }else{
                 $mois = false;
+            }
+            if($form->getData()['annee'] != null){
+                $annee = $form->getData()['annee'];
+            }else{
+                $annee = false;
             }
             if($form->getData()['lineUp'] != null){
                 $lineUp = $form->getData()['lineUp']->getId();
@@ -97,13 +115,13 @@ class SiteController extends Controller
                 $resultats = false;
             }
 
-            $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $lineUp, $site->getId(), $categorie, $resultats);
+            $tournois = $em->getRepository('AppBundle:Tournois')->getSearch($mois, $annee, $lineUp, $site->getId(), $categorie, $resultats);
         }
 
         return $this->render('site/show.html.twig', array(
-            'name' => $name,
+            'site' => $site,
             'form' => $form->createView(),
-            'site' => $tournois,
+            'tournoiss' => $tournois,
         ));
     }
 }

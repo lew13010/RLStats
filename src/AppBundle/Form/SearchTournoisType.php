@@ -20,6 +20,15 @@ class SearchTournoisType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $date = new \DateTime();
+        $month = $date->format('m');
+        $year = $date->format('Y');
+
+        $years = array();
+        for ($i = $year; $i>= 2017; $i--){
+            $years[$i] = $i;
+        }
+
         $builder
             ->add('mois', ChoiceType::class, array(
                 'placeholder' => '-- Mois --',
@@ -37,6 +46,13 @@ class SearchTournoisType extends AbstractType
                   'Novembre' => '11',
                   'Decembre' => '12',
                 ),
+                'data' => $month,
+                'required' => false,
+            ))
+            ->add('annee', ChoiceType::class, array(
+                'placeholder' => '-- Année --',
+                'choices' => $years,
+                'data' => $year,
                 'required' => false,
             ))
             ->add('site', EntityType::class, array(

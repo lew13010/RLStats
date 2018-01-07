@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="header">
-        <h2>Tournois : {{ name }}</h2>
+        <h2>Tournois : {{ site.name }}</h2>
     </div>
 
     <hr>
@@ -10,6 +10,9 @@
     <div class="form-row mx-auto">
         <div class="col">
             {{ form_widget(form.mois) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form.annee) }}
         </div>
         <div class="col">
             {{ form_widget(form.lineUp) }}
@@ -24,7 +27,7 @@
             {{ form_widget(form.submit) }}
         </div>
         <div class="col">
-            <a href="{{ path('site_index') }}" class="btn btn-dark">RAZ Filtre</a>
+            <a href="{{ path('site_show', { 'id': site.id }) }}" class="btn btn-dark">RAZ Filtre</a>
         </div>
     </div>
     {{ form_end(form) }}
@@ -42,7 +45,7 @@
                 <th>Actions</th>
             {% endif %}
         </tr>
-        {% for tournois in site %}
+        {% for tournois in tournoiss %}
             <tr>
                 <td>{{ tournois.dateTournois|date('d/m/Y') }}</td>
                 <td><a href="{{ path('lineup_show', {'id': tournois.lineUps.id}) }}">{{ tournois.lineUps.tag }}</a></td>
