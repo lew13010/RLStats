@@ -28,6 +28,13 @@ class Date
      */
     private $updateAt;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="erreur", type="array", length=255, nullable=true)
+     */
+    private $erreur;
+
 
     /**
      * Get id
@@ -62,5 +69,28 @@ class Date
     {
         return $this->updateAt;
     }
-}
 
+    /**
+     * Set erreur
+     *
+     * @param array $erreur
+     *
+     * @return Date
+     */
+    public function setErreur($erreur)
+    {
+        $this->erreur = $erreur;
+
+        return $this;
+    }
+
+    /**
+     * Get erreur
+     *
+     * @return array
+     */
+    public function getErreur()
+    {
+        return $this->erreur;
+    }
+}

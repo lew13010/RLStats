@@ -9,6 +9,7 @@
 namespace AppBundle\Command;
 
 
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -46,13 +47,19 @@ class AutoUpdateCommand extends Command implements ContainerAwareInterface
     {
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         $joueurs = $em->getRepository('AppBundle:Joueur')->findAll();
+        $erreur = array();
         foreach ($joueurs as $joueur) {
-            $this->container->get('app.service.api')->autoUpdate($joueur);
-            usleep(500000);
+            try{
+                $this->container->get('app.service.api')->autoUpdate($joueur);
+                usleep(500000);
+            }catch (\Exception $exception){
+                $erreur[] = $joueur->getPseudo();
+            }
         }
         $date = new \DateTime('NOW');
 
         $update = $em->getRepository('AppBundle:Date')->findOneBy(array('id' => 1));
+        $update->setErreur($erreur);
         $update->setUpdateAt($date);
         $em->persist($update);
         $em->flush();
