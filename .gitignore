@@ -3,14 +3,14 @@
 /app/logs/*
 !app/cache/.gitkeep
 !app/logs/.gitkeep
-!app/session/.gitkeep
+!app/sessions/.gitkeep
 
 # Cache and logs (Symfony3)
 /var/cache/*
 /var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
-!var/session/.gitkeep
+!var/sessions/.gitkeep
 
 # Parameters
 /app/config/parameters.yml
@@ -40,3 +40,27 @@
 
 .idea
 *~
+
+var/sessions/dev/sess_1cb6mdpup4fdn83mqnl2ppani2
+
+var/sessions/dev/sess_20l59p5e2qr250uo4a2ock3061
+
+var/sessions/dev/sess_i9f5c90317gmddo7p0i8ekfa93
+
+var/sessions/dev/sess_mlk9g9oi3ki1672gliedaqiam3
+
+var/sessions/dev/sess_ttsj09kia6o4j6slucgvinfji7
+
+var/sessions/dev/sess_uq7eepndten4ddtriots2alak2
+
+var/sessions/prod/sess_25k8u3lgh1kjbavskf5qn0gr50
+
+var/sessions/prod/sess_910kuuqm3t859uoiotdtc2m6v7
+
+var/sessions/prod/sess_eilss0v87lnu343tlt36l02qi4
+
+var/sessions/prod/sess_nbn5fmsij9h42vouvbvvftd5m7
+
+var/sessions/dev/sess_7vb5k80s3oobnqjugkq2hfbpr2
+
+var/sessions/dev/sess_8bi8tac3p89s8fboleoibsk6r6
