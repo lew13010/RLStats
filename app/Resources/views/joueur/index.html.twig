@@ -3,7 +3,17 @@
 {% block body %}
     <div class="header">
         <h2>Joueurs <span class="badge badge-info">{{ count }}</span></h2>
-        <p>Last Update : <b>{{ update|date('d/m/Y h:i') }}</b></p>
+        <p>Last Update : <b>{{ update.updateAt|date('d/m/Y h:i') }}</b></p>
+        {% if is_granted('ROLE_ADMIN') %}
+            (Probleme MAJ :
+            {% if update.erreur is empty %}
+                Aucun)
+            {% else %}
+                {% for erreur in update.erreur %}
+                    {{ erreur }}{% if not loop.last %} - {% else %}){% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
     </div>
 
     <hr>
