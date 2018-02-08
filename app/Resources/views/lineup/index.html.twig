@@ -18,7 +18,12 @@
         <tbody>
         {% for lineUp in lineUps %}
             <tr>
-                <td>{{ lineUp.nom }}</td>
+                <td>
+                    {{ lineUp.nom }} <br>
+                    {% if lineUp.esport %}
+                        <span class="small" style="color: #ff0000;">Delta e-Sport</span>
+                    {% endif %}
+                </td>
                 <td>{{ lineUp.tag }}</td>
                 <td><img src="{{ asset('bundles/app/img/') }}{{ lineUp.rankMin.image }}.png" height="50" width="50">
                 </td>

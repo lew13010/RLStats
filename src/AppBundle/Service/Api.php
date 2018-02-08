@@ -56,7 +56,7 @@ class Api
         $endpoint = 'https://api.rocketleaguestats.com/v1/player?unique_id=' . $id . '&platform_id=1&apikey='.$this->key;
         $json = json_decode(file_get_contents($endpoint), true);
 
-        $ranks = $json['rankedSeasons'][6];
+        $ranks = $json['rankedSeasons'][7];
         $i=0;
 
         for ($i = 10; $i <= 13; $i++) {

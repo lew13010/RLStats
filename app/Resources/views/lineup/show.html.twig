@@ -11,6 +11,9 @@
             <div class="card-body">
                 <h2 class="card-title">{{ lineUp.tag }}</h2>
                 <h4 class="card-subtitle mb-2 text-muted">{{ lineUp.nom }}</h4>
+                {% if lineUp.esport %}
+                    <p class="small" style="color: #ff0000;">Delta e-Sport</p>
+                {% endif %}
                 <p class="card-text"><b>Joueurs : </b>
                     {% for joueur in lineUp.joueurs %}
                         {{ joueur.pseudo }}{% if not loop.last %}, {% endif %}
