@@ -57,7 +57,8 @@ class JoueurController extends Controller
             $em = $this->getDoctrine()->getManager();
             $api = $this->get('app.service.api')->getRanking($joueur->getUrl());
             if ($api) {
-                $ranks = $api['json']['rankedSeasons'][7];
+                $season = $this->getParameter('app')['season'];
+                $ranks = $api['json']['rankedSeasons'][$season];
                 $joueur->setSteamId($api['steamId']);
 
                 $em->persist($joueur);
@@ -133,7 +134,8 @@ class JoueurController extends Controller
             $em = $this->getDoctrine()->getManager();
             $api = $this->get('app.service.api')->getRanking($joueur->getUrl());
             if ($api) {
-                $ranks = $api['json']['rankedSeasons'][7];
+                $season = $this->getParameter('app')['season'];
+                $ranks = $api['json']['rankedSeasons'][$season];
                 $joueur->setSteamId($api['steamId']);
 
                 $em->persist($joueur);

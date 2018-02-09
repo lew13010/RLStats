@@ -17,11 +17,13 @@ class Api
 {
     private $em;
     private $key;
+    private $season;
 
     public function __construct(EntityManager $entityManager, ContainerInterface $container)
     {
         $this->em = $entityManager;
         $this->key = $container->getParameter('api_key');
+        $this->season = $container->getParameter('app')['season'];
     }
 
     public function getRanking($url)
@@ -56,7 +58,7 @@ class Api
         $endpoint = 'https://api.rocketleaguestats.com/v1/player?unique_id=' . $id . '&platform_id=1&apikey='.$this->key;
         $json = json_decode(file_get_contents($endpoint), true);
 
-        $ranks = $json['rankedSeasons'][7];
+        $ranks = $json['rankedSeasons'][$this->season];
         $i=0;
 
         for ($i = 10; $i <= 13; $i++) {
