@@ -30,7 +30,11 @@ class JoueurController extends Controller
             $rankMin = $form->getData()['rankMin'];
             $rankMax = $form->getData()['rankMax'];
             $categorie = $form->getData()['categorie'];
-            $joueurs = $em->getRepository('AppBundle:Joueur')->getSearchWithRank($rankMin->getTierId(), $rankMax->getTierId(), $categorie->getId());
+            if ($categorie == null){
+                $joueurs = $em->getRepository('AppBundle:Joueur')->getSearchWithRankWithoutCat($rankMin->getTierId(), $rankMax->getTierId());
+            }else{
+                $joueurs = $em->getRepository('AppBundle:Joueur')->getSearchWithRank($rankMin->getTierId(), $rankMax->getTierId(), $categorie->getId());
+            }
         }
 
         $count = count($joueurs);

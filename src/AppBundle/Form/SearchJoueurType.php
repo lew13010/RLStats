@@ -51,7 +51,7 @@ class SearchJoueurType extends AbstractType
                         return $er->createQueryBuilder('t')
                             ->orderBy('t.id', 'ASC');
                     },
-                    'required' => true,
+                    'required' => false,
                 )
             )
             ->add('submit', SubmitType::class, array(

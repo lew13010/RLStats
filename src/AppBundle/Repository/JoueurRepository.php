@@ -46,4 +46,23 @@ class JoueurRepository extends \Doctrine\ORM\EntityRepository
         ;
         return $qb->getQuery()->getResult();
     }
+
+    public function getSearchWithRankWithoutCat($rankMin, $rankMax)
+    {
+        $qb = $this->createQueryBuilder('j');
+        $qb
+            ->select('j', 'r', 'd', 't', 'l')
+            ->leftJoin('j.lineUp', 'l')
+            ->innerJoin('j.ranks', 'r')
+            ->innerJoin('r.tiers', 't')
+            ->innerJoin('r.divisions','d')
+            ->andWhere('t.tierId >= :rankMin')
+            ->andWhere('t.tierId <= :rankMax')
+            ->setParameter('rankMin', $rankMin)
+            ->setParameter('rankMax', $rankMax)
+            ->addOrderBy('j.pseudo', 'asc')
+            ->addOrderBy('r.types', 'asc')
+        ;
+        return $qb->getQuery()->getResult();
+    }
 }
