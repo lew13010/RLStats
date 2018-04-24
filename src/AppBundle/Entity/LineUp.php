@@ -60,7 +60,7 @@ class LineUp
     private $joueurs;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournois", mappedBy="lineUps")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournois", mappedBy="lineUps", cascade={"remove"})
      */
     private $tournois;
 
