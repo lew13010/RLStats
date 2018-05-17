@@ -31,7 +31,7 @@ class Date
     /**
      * @var array
      *
-     * @ORM\Column(name="erreur", type="array", length=255, nullable=true)
+     * @ORM\Column(name="erreur", type="array", nullable=true)
      */
     private $erreur;
 
