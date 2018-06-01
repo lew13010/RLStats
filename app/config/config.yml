@@ -84,4 +84,4 @@ vich_uploader:
             namer: vich_uploader.namer_uniqid
 
 app:
-    season: 7
+    season: 8
