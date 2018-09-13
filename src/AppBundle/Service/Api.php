@@ -10,6 +10,7 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Entity\Joueur;
+use DiDom\Document;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,7 +27,7 @@ class Api
         $this->season = $container->getParameter('app')['season'];
     }
 
-    public function getRanking($url)
+    public function getSteam($url)
     {
         if (preg_match('/id\//', $url) === 1) {
             $split = preg_split('/id\//', $url);
@@ -38,15 +39,9 @@ class Api
             $id = str_replace('/', '', $split[1]);
         }
 
-        if (isset($id)) {
-            $endpoint = 'https://api.rocketleaguestats.com/v1/player?unique_id=' . $id . '&platform_id=1&apikey='.$this->key;
-            try {
-                $json = json_decode(file_get_contents($endpoint), true);
-                return array('json' => $json, 'steamId' => $id);
-            }catch (\Exception $e){
-                return false;
-            }
-        } else {
+        if (isset($id)){
+            return $id;
+        }else{
             return false;
         }
     }
@@ -55,35 +50,21 @@ class Api
     {
         $id = $joueur->getSteamId();
 
-        $endpoint = 'https://api.rocketleaguestats.com/v1/player?unique_id=' . $id . '&platform_id=1&apikey='.$this->key;
-        $json = json_decode(file_get_contents($endpoint), true);
-
-        $ranks = $json['rankedSeasons'][$this->season];
-        $i=0;
+        $url = 'https://rltracker.pro/profiles/' . $id . '/steam';
+        $document = new Document($url, true);
 
         for ($i = 10; $i <= 13; $i++) {
-            $typeId = ($i - 9);
-            $type = $this->em->getRepository('AppBundle:Type')->find($typeId);
+            $type = $i - 9;
             $r = $this->em->getRepository('AppBundle:Ranks')->findOneBy(array('joueurs' => $joueur, 'types' => $type));
-            if (isset($ranks[$i])) {
-                $tier = $this->em->getRepository('AppBundle:Tier')->find($ranks[$i]['tier'] + 1);
-                if ($ranks[$i]['tier'] > 0) {
-                    $division = $this->em->getRepository('AppBundle:Division')->find($ranks[$i]['division'] + 2);
-                } else {
-                    $division = $this->em->getRepository('AppBundle:Division')->find(1);
-                }
-                $rankPoints = $ranks[$i]['rankPoints'];
-                $rankPlayed = $ranks[$i]['matchesPlayed'];
-            } else {
-                $rankPoints = 100;
-                $rankPlayed = 0;
-                $tier = $this->em->getRepository('AppBundle:Tier')->find(1);
-                $division = $this->em->getRepository('AppBundle:Division')->find(1);
-            }
-            $r->setPoints($rankPoints);
-            $r->setNbMatch($rankPlayed);
+
+            $div = $this->em->getRepository('AppBundle:Division')->findOneBy(array('division' => $document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .division > span')[0]->getNode()->nodeValue));
+            $tier = $this->em->getRepository('AppBundle:Tier')->findOneBy(array('tierName' => $document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .tier_name')[0]->getNode()->nodeValue));
+
+            $r->setDivisions($div);
             $r->setTiers($tier);
-            $r->setDivisions($division);
+            $r->setNbMatch($document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .matches > span')[0]->getNode()->nodeValue);
+            $r->setPoints($document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .rating > span')[0]->getNode()->nodeValue);
+
             $this->em->persist($r);
             $this->em->flush();
         }

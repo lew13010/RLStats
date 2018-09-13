@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Joueur;
 use AppBundle\Entity\Ranks;
+use DiDom\Document;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,9 +31,9 @@ class JoueurController extends Controller
             $rankMin = $form->getData()['rankMin'];
             $rankMax = $form->getData()['rankMax'];
             $categorie = $form->getData()['categorie'];
-            if ($categorie == null){
+            if ($categorie == null) {
                 $joueurs = $em->getRepository('AppBundle:Joueur')->getSearchWithRankWithoutCat($rankMin->getTierId(), $rankMax->getTierId());
-            }else{
+            } else {
                 $joueurs = $em->getRepository('AppBundle:Joueur')->getSearchWithRank($rankMin->getTierId(), $rankMax->getTierId(), $categorie->getId());
             }
         }
@@ -59,50 +60,38 @@ class JoueurController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $api = $this->get('app.service.api')->getRanking($joueur->getUrl());
-            if ($api) {
-                $season = $this->getParameter('app')['season'];
-                $ranks = $api['json']['rankedSeasons'][$season];
-                $joueur->setSteamId($api['steamId']);
-
-                $em->persist($joueur);
-
+            $id = $this->get('app.service.api')->getSteam($joueur->getUrl());
+            if ($id) {
+                $joueur->setSteamId($id);
                 for ($i = 10; $i <= 13; $i++) {
                     $typeId = ($i - 9);
                     $type = $em->getRepository('AppBundle:Type')->find($typeId);
+                    $tier = $em->getRepository('AppBundle:Tier')->findOneBy(array('id' => 1));
+                    $div = $em->getRepository('AppBundle:Division')->findOneBy(array('id' => 1));
+
                     $r = new Ranks();
                     $r->setJoueurs($joueur);
                     $r->setTypes($type);
-                    if (isset($ranks[$i])) {
-                        $tier = $em->getRepository('AppBundle:Tier')->find($ranks[$i]['tier'] + 1);
-                        if ($ranks[$i]['tier'] > 0) {
-                            $division = $em->getRepository('AppBundle:Division')->find($ranks[$i]['division'] + 2);
-                        } else {
-                            $division = $em->getRepository('AppBundle:Division')->find(1);
-                        }
-                        $rankPoints = $ranks[$i]['rankPoints'];
-                        $rankPlayed = $ranks[$i]['matchesPlayed'];
-                    } else {
-                        $rankPoints = 100;
-                        $rankPlayed = 0;
-                        $tier = $em->getRepository('AppBundle:Tier')->find(1);
-                        $division = $em->getRepository('AppBundle:Division')->find(1);
-                    }
-                    $r->setPoints($rankPoints);
-                    $r->setNbMatch($rankPlayed);
                     $r->setTiers($tier);
-                    $r->setDivisions($division);
+                    $r->setDivisions($div);
+                    $r->setPoints(0);
+                    $r->setNbMatch(0);
+
                     $em->persist($r);
-                    $em->flush();
                 }
-
                 $em->flush();
-
+                try{
+                    $this->get('app.service.api')->autoUpdate($joueur);
+                }catch (\Exception $exception){
+                    $this->addFlash('danger', 'Erreur sur l\'url du joueur');
+                    return $this->redirectToRoute('joueur_edit', array('id' => $joueur->getId()));
+                }
                 return $this->redirectToRoute('joueur_index');
             } else {
                 $this->addFlash('danger', 'Erreur sur l\'url du joueur');
             }
         }
+
 
         return $this->render('joueur/new.html.twig', array(
             'joueur' => $joueur,
@@ -114,7 +103,8 @@ class JoueurController extends Controller
      * Finds and displays a joueur entity.
      *
      */
-    public function showAction(Joueur $joueur)
+    public
+    function showAction(Joueur $joueur)
     {
         $deleteForm = $this->createDeleteForm($joueur);
 
@@ -128,7 +118,8 @@ class JoueurController extends Controller
      * Displays a form to edit an existing joueur entity.
      *
      */
-    public function editAction(Request $request, Joueur $joueur)
+    public
+    function editAction(Request $request, Joueur $joueur)
     {
         $deleteForm = $this->createDeleteForm($joueur);
         $editForm = $this->createForm('AppBundle\Form\JoueurType', $joueur);
@@ -136,48 +127,23 @@ class JoueurController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $api = $this->get('app.service.api')->getRanking($joueur->getUrl());
-            if ($api) {
-                $season = $this->getParameter('app')['season'];
-                $ranks = $api['json']['rankedSeasons'][$season];
-                $joueur->setSteamId($api['steamId']);
+            $id = $this->get('app.service.api')->getSteam($joueur->getUrl());
+            if ($id) {
+                $joueur->setSteamId($id);
+                $em->flush();
 
-                $em->persist($joueur);
-
-                for ($i = 10; $i <= 13; $i++) {
-                    $typeId = ($i - 9);
-                    $type = $em->getRepository('AppBundle:Type')->find($typeId);
-                    $r = $em->getRepository('AppBundle:Ranks')->findOneBy(array('joueurs' => $joueur, 'types' => $type));
-                    if (isset($ranks[$i])) {
-                        $tier = $em->getRepository('AppBundle:Tier')->find($ranks[$i]['tier'] + 1);
-                        if ($ranks[$i]['tier'] > 0) {
-                            $division = $em->getRepository('AppBundle:Division')->find($ranks[$i]['division'] + 2);
-                        } else {
-                            $division = $em->getRepository('AppBundle:Division')->find(1);
-                        }
-                        $rankPoints = $ranks[$i]['rankPoints'];
-                        $rankPlayed = $ranks[$i]['matchesPlayed'];
-                    } else {
-                        $rankPoints = 100;
-                        $rankPlayed = 0;
-                        $tier = $em->getRepository('AppBundle:Tier')->find(1);
-                        $division = $em->getRepository('AppBundle:Division')->find(1);
-                    }
-                    $r->setPoints($rankPoints);
-                    $r->setNbMatch($rankPlayed);
-                    $r->setTiers($tier);
-                    $r->setDivisions($division);
-                    $em->persist($r);
-                    $em->flush();
+                try{
+                    $this->get('app.service.api')->autoUpdate($joueur);
+                }catch (\Exception $exception){
+                    $this->addFlash('danger', 'Erreur sur l\'url du joueur');
+                    return $this->redirectToRoute('joueur_edit', array('id' => $joueur->getId()));
                 }
+
+                return $this->redirectToRoute('joueur_index');
+
             } else {
                 $this->addFlash('danger', 'Erreur sur l\'url du joueur');
             }
-
-
-            $em->flush();
-
-            return $this->redirectToRoute('joueur_index');
         }
 
         return $this->render('joueur/edit.html.twig', array(
