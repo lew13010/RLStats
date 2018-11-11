@@ -3,7 +3,7 @@
 {% block body %}
     <div class="header">
         <h2>Joueurs <span class="badge badge-info">{{ count }}</span></h2>
-        <p>Last Update : <b>{{ update.updateAt|date('d/m/Y h:i') }}</b></p>
+        <p>Last Update : <b>{{ update.updateAt|date('d/m/Y H:i') }}</b></p>
     </div>
 
     <hr>
@@ -51,7 +51,8 @@
                 <td>
                     <b>{{ joueur.pseudo }}</b><br>
                     {% if joueur.lastUpdate < update.updateAt %}
-                        <span class="small font-weight-bold text-secondary">Erreur d'actualisation </span><br>
+                        <span class="small font-weight-bold text-secondary">
+                            {{ joueur.lastUpdate|date('d/m/Y H:i') }}</span><br>
                     {% endif %}
                     {% if joueur.association %}
                         <span class="small" style="color: #FECF10">Membre Association</span><br>
