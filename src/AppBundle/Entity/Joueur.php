@@ -74,6 +74,11 @@ class Joueur
     private $functions;
 
     /**
+     * @ORM\Column(name="last_update", type="datetime")
+     */
+    private $lastUpdate;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -319,5 +324,21 @@ class Joueur
     public function getFunctions()
     {
         return $this->functions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
+    }
+
+    /**
+     * @param mixed $lastUpdate
+     */
+    public function setLastUpdate($lastUpdate)
+    {
+        $this->lastUpdate = $lastUpdate;
     }
 }

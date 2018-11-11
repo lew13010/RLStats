@@ -47,22 +47,17 @@ class AutoUpdateCommand extends Command implements ContainerAwareInterface
     {
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         $joueurs = $em->getRepository('AppBundle:Joueur')->findAll();
-        $erreurs = array();
+        $date = new \DateTime('NOW');
         foreach ($joueurs as $joueur) {
             try{
                 $this->container->get('app.service.api')->autoUpdate($joueur);
+                $joueur->setLastUpdate($date);
+                $em->persist($joueur);
                 usleep(500000);
             }catch (\Exception $exception){
-                $erreurs[] = $joueur->getPseudo();
+                return $exception;
             }
         }
-        $erreur = array_unique($erreurs);
-        $date = new \DateTime('NOW');
-
-        $update = $em->getRepository('AppBundle:Date')->findOneBy(array('id' => 1));
-        $update->setErreur($erreur);
-        $update->setUpdateAt($date);
-        $em->persist($update);
         $em->flush();
     }
 }
