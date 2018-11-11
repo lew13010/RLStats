@@ -51,7 +51,7 @@
                 <td>
                     <b>{{ joueur.pseudo }}</b><br>
                     {% if joueur.lastUpdate < update.updateAt %}
-                        Erreur d'actualisation
+                        <span class="small font-weight-bold text-secondary">Erreur d'actualisation </span><br>
                     {% endif %}
                     {% if joueur.association %}
                         <span class="small" style="color: #FECF10">Membre Association</span><br>
