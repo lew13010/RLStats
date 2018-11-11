@@ -57,6 +57,10 @@ class AutoUpdateCommand extends Command implements ContainerAwareInterface
             }catch (\Exception $exception){
             }
         }
+
+        $update = $em->getRepository('AppBundle:Date')->findOneBy(array('id' => 1));
+        $update->setUpdateAt($date);
+        $em->persist($update);
         $em->flush();
     }
 }

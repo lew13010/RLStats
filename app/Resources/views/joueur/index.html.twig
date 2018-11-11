@@ -60,6 +60,9 @@
             <tr>
                 <td>
                     <b>{{ joueur.pseudo }}</b><br>
+                    {% if joueur.lastUpdate < update.updateAt %}
+                        Erreur d'actualisation
+                    {% endif %}
                     {% if joueur.association %}
                         <span class="small" style="color: #FECF10">Membre Association</span><br>
                     {% endif %}
