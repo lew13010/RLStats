@@ -55,7 +55,6 @@ class AutoUpdateCommand extends Command implements ContainerAwareInterface
                 $em->persist($joueur);
                 usleep(500000);
             }catch (\Exception $exception){
-                return $exception;
             }
         }
         $em->flush();
