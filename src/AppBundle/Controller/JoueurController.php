@@ -80,9 +80,9 @@ class JoueurController extends Controller
                     $em->persist($r);
                 }
                 $em->flush();
-                try{
+                try {
                     $this->get('app.service.api')->autoUpdate($joueur);
-                }catch (\Exception $exception){
+                } catch (\Exception $exception) {
                     $this->addFlash('danger', 'Erreur sur l\'url du joueur');
                     return $this->redirectToRoute('joueur_edit', array('id' => $joueur->getId()));
                 }
@@ -132,9 +132,9 @@ class JoueurController extends Controller
                 $joueur->setSteamId($id);
                 $em->flush();
 
-                try{
+                try {
                     $this->get('app.service.api')->autoUpdate($joueur);
-                }catch (\Exception $exception){
+                } catch (\Exception $exception) {
                     $this->addFlash('danger', 'Erreur sur l\'url du joueur');
                     return $this->redirectToRoute('joueur_edit', array('id' => $joueur->getId()));
                 }

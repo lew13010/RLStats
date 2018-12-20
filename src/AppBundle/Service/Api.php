@@ -39,9 +39,9 @@ class Api
             $id = str_replace('/', '', $split[1]);
         }
 
-        if (isset($id)){
+        if (isset($id)) {
             return $id;
-        }else{
+        } else {
             return false;
         }
     }
@@ -49,25 +49,40 @@ class Api
     public function autoUpdate(Joueur $joueur)
     {
         $id = $joueur->getSteamId();
+        $em = $this->em;
 
-        $url = 'https://rltracker.pro/profiles/' . $id . '/steam';
+        $url = 'https://rocketleague.tracker.network/profile/steam/' . $id;
         $document = new Document($url, true);
+        $modes = [1 => 'Ranked Duel 1v1 ', 2 => 'Ranked Doubles 2v2', 3 => 'Ranked Solo Standard 3v3', 4 => 'Ranked Standard 3v3'];
+        foreach ($modes as $key => $mode) {
+            $r = $em->getRepository('AppBundle:Ranks')->findOneBy(array('joueurs' => $joueur->getId(), 'types' => $key));
+            $tr = $document->find('#season-9 tr > td:contains(' . $mode . ')')[0]->parent();
 
-        for ($i = 10; $i <= 13; $i++) {
-            $type = $i - 9;
-            $r = $this->em->getRepository('AppBundle:Ranks')->findOneBy(array('joueurs' => $joueur, 'types' => $type));
+            if ($tr->find('td:nth-child(6) > small') != null) {
+                $subString = trim(explode(' ', $tr->find('td:nth-child(6) > small')[0]->getNode()->nodeValue)[0]);
+                $nbMatch = intval(str_replace($subString, '', trim(explode(' ', $tr->find('td:nth-child(6)')[0]->getNode()->nodeValue)[0])));
+            }
+            $nbMatch = intval(trim(explode(' ', $tr->find('td:nth-child(6)')[0]->getNode()->nodeValue)[0]));
+            $mmr = intval(str_replace(',', '', trim(explode(' ', $tr->find('td:nth-child(4)')[0]->getNode()->nodeValue)[0])));
 
-            $div = $this->em->getRepository('AppBundle:Division')->findOneBy(array('division' => $document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .division > span')[0]->getNode()->nodeValue));
-            $tier = $this->em->getRepository('AppBundle:Tier')->findOneBy(array('tierName' => $document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .tier_name')[0]->getNode()->nodeValue));
+            if ($nbMatch < 10) {
+                $div = $em->getRepository('AppBundle:Division')->findOneBy(array('id' => 1));
+                $tier = $em->getRepository('AppBundle:Tier')->findOneBy(array('id' => 1));
+            } else {
+                $explodeRank = explode('Division', $tr->find('td:nth-child(2) > small')[0]->getNode()->nodeValue);
+                $rank = trim($explodeRank[0]);
+                $division = trim($explodeRank[1]);
+                $tier = $em->getRepository('AppBundle:Tier')->findOneBy(array('tierName' => $rank));
+                $div = $em->getRepository('AppBundle:Division')->findOneBy(array('division' => $division));
+            }
 
             $r->setDivisions($div);
+            $r->setNbMatch($nbMatch);
+            $r->setPoints($mmr);
             $r->setTiers($tier);
-            $r->setNbMatch($document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .matches > span')[0]->getNode()->nodeValue);
-            $r->setPoints($document->find('.season'.$this->season.'_div > .playlist_' . $i . ' > .rating > span')[0]->getNode()->nodeValue);
-
-            $this->em->persist($r);
-            $this->em->flush();
+            $em->persist($r);
         }
+        $em->flush();
     }
 }
 
